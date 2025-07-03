@@ -192,7 +192,6 @@ export class Featherless implements INodeType {
 					const options: IHttpRequestOptions = {
 						url: 'https://api.featherless.ai/v1/chat/completions',
 						headers: {
-							Authorization: `Bearer ${credentials.apiKey}`,
 							'HTTP-Referer': 'https://github.com/featherlessai/n8n-nodes-featherless',
 							'X-Title': 'n8n Featherless Node',
 							'Content-Type': 'application/json',
