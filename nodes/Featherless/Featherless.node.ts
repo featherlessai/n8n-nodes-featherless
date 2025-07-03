@@ -5,7 +5,7 @@ import type {
 	INodeTypeDescription,
 	IDataObject,
 	IHttpRequestMethods,
-	IRequestOptions,
+	IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 
@@ -41,6 +41,7 @@ export class Featherless implements INodeType {
 		defaults: {
 			name: 'Featherless',
 		},
+		usableAsTool: true,
 		inputs: '={{["main"]}}',
 		outputs: '={{["main"]}}',
 		credentials: [
@@ -71,7 +72,8 @@ export class Featherless implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
-				description: 'Enter the model ID you want to use. Visit https://featherless.ai/models to view available models.',
+				description:
+					'Enter the model ID you want to use. Visit https://featherless.ai/models to view available models.',
 				placeholder: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
 			},
 			{
@@ -138,15 +140,12 @@ export class Featherless implements INodeType {
 						name: 'top_p',
 						type: 'number',
 						default: 1,
-						description:
-							'An alternative to sampling with temperature, called nucleus sampling',
+						description: 'An alternative to sampling with temperature, called nucleus sampling',
 					},
 				],
 			},
 		],
 	};
-
-
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
@@ -190,7 +189,7 @@ export class Featherless implements INodeType {
 						...additionalFields,
 					};
 
-					const options: IRequestOptions = {
+					const options: IHttpRequestOptions = {
 						url: 'https://api.featherless.ai/v1/chat/completions',
 						headers: {
 							Authorization: `Bearer ${credentials.apiKey}`,
@@ -203,7 +202,11 @@ export class Featherless implements INodeType {
 						json: true,
 					};
 
-					const response = await this.helpers.request(options);
+					const response = await this.helpers.httpRequestWithAuthentication.call(
+						this,
+						'featherlessApi',
+						options,
+					);
 
 					if (!response?.choices?.[0]?.message?.content) {
 						throw new NodeOperationError(

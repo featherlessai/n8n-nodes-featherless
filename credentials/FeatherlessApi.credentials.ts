@@ -22,11 +22,11 @@ export class FeatherlessApi implements ICredentialType {
 			description: 'The Featherless API key',
 		},
 	];
-    authenticate: IAuthenticateGeneric = {
+	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
 			headers: {
-				'Authorization': '=Bearer {{$credentials.apiKey}}',
+				Authorization: '=Bearer {{$credentials.apiKey}}',
 			},
 		},
 	};
